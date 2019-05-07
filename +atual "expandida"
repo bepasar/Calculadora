@@ -1,0 +1,181 @@
+package ExercicioCalculadora;
+import java.lang.Math;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Calculadora extends JFrame { // funciona fazendo as operações parciais sequencialmente (BUGADO)
+
+	private JButton[] buttons; // array de botoes
+
+	private JTextField expressao;
+	
+	private String guarda_valores = "", display = "", resposta = "", calcular = "";
+	private double result = 0, op1, op2, parcial = 0;
+	private int cont_op = 0;
+	private boolean eh_negativo;
+	
+	private static final String[] names = {"x!","e^x","raiz²","7", "8", "9", "/",
+											"raiz³","%","x²", "4","5", "6", "*", 
+											"x³","x^y","pi","1", "2", "3", "-", 
+											"C","(",")","0", ".", "=","+" };
+	
+	private JPanel botoes;
+
+	private GridLayout organizaBotoes;
+
+	// construtor sem argumentos
+
+	public Calculadora() {
+
+		super("Calculadora");
+
+		setLayout(new BorderLayout());
+
+		expressao = new JTextField("", 15);
+		add(expressao, BorderLayout.NORTH);
+
+		botoes = new JPanel();
+		organizaBotoes = new GridLayout(4, 4); // botoes calculadora
+		botoes.setLayout(organizaBotoes);
+		add(botoes);
+
+		buttons = new JButton[names.length]; // cria array de JButtons
+
+		for (int count = 0; count < names.length; count++) {
+
+			buttons[count] = new JButton(names[count]);
+
+			botoes.add(buttons[count]);// adiciona botao ao JFrame
+			
+			buttons[count].addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					int cont = 0;
+					String operacao;
+					while(e.getActionCommand() != "=" && e.getActionCommand() != "C" && cont == 0) {
+						guarda_valores = guarda_valores + e.getActionCommand();
+						cont ++;
+						expressao.setText(guarda_valores);
+						System.out.print("\nguarda_valores: "+guarda_valores+"\tcontador guarda valores:"+cont+"\tcomprimento:"+guarda_valores.length());
+					}
+					if (!Character.isDigit(e.getActionCommand().charAt(0)) && e.getActionCommand() != ".") {
+						operacao = e.getActionCommand();
+						switch (operacao) 
+						{
+							case "+": // OK!
+								display += guarda_valores;
+								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+								System.out.print("\nresult parcial:"+op1+" + "+Double.parseDouble(guarda_valores)+" = ");
+								op1 = op1 + Double.parseDouble(guarda_valores);
+								System.out.print(+op1);
+								expressao.setText(display);
+								calcular = operacao;
+								guarda_valores = "";
+								break;
+							case "-": // aQUI
+								if (!guarda_valores.equals("-")) {
+									System.out.print("\nguarda_valores: "+guarda_valores);
+									display += guarda_valores;
+									guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+									if (cont_op == 0) {
+										op1 = op1 + (Double.parseDouble(guarda_valores));
+										cont_op++;
+									}
+									else
+										op1 = op1 - Double.parseDouble(guarda_valores);		
+								}
+								else {
+									display += guarda_valores;
+									op1 = result;
+									System.out.print("\nENTROU?");
+								}
+								System.out.print("\nresult parcial (subt):"+op1);
+								expressao.setText(display);
+								calcular = operacao;
+								guarda_valores = "";
+								break;
+							case "*":
+								display += guarda_valores;
+								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+								result = result * Double.parseDouble(guarda_valores);
+								System.out.print("\nRESULT:"+result);
+								expressao.setText(display);	
+								guarda_valores = "";
+								resposta = String.valueOf(result);
+								break;
+							case "/":
+								display += guarda_valores;
+								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+								if (Double.parseDouble(guarda_valores) != 0) {
+									result = result / Double.parseDouble(guarda_valores);
+									expressao.setText(display);
+									resposta = String.valueOf(result);
+								}
+								else
+									expressao.setText("ERRO DIVISAO POR ZERO!");		
+								System.out.print("\nRESULT:"+result);									
+								guarda_valores = "";
+								break;
+							case "pi":
+								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-2) + "3.1415";
+								display += guarda_valores;	 
+								expressao.setText(display);	
+								guarda_valores = "";
+								break;
+							case "=":
+								switch (calcular) {
+									case "+":
+										op2 = Double.parseDouble(guarda_valores);
+										result = op1 + op2;
+										System.out.print("\nRESULT FINAL:"+op1+" + "+op2+" = "+result);
+										break;
+									case "-":
+										op2 = Double.parseDouble(guarda_valores);
+										result = op1 - op2;
+										System.out.print("\nRESULT FINAL:"+op1+" - "+op2+" = "+result);
+										break;
+								}
+								resposta = String.valueOf(result);
+								expressao.setText(resposta);
+								guarda_valores = "";
+								break;
+							case "C": 
+								guarda_valores = "";
+								display = "";
+								result = 0;
+								op1 = 0;
+								op2 = 0;
+								cont_op = 0;
+								expressao.setText("");
+								break;
+							default: expressao.setText("ERRO! OPERAÇAO INVALIDA");
+						}
+					}
+					
+				}
+			});
+		}
+	}
+	public static void main(String[] args) {
+
+		Calculadora gridLayoutFrame = new Calculadora();
+
+		gridLayoutFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		gridLayoutFrame.setSize(475, 200);
+
+		gridLayoutFrame.setVisible(true);
+
+	}
+
+}
