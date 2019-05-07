@@ -105,15 +105,34 @@ public class Calculadora extends JFrame { // funciona fazendo as operações par
 								guarda_valores = "";
 								break;
 							case "*":
-								display += guarda_valores;
-								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
-								result = result * Double.parseDouble(guarda_valores);
-								System.out.print("\nRESULT:"+result);
-								expressao.setText(display);	
-								guarda_valores = "";
-								resposta = String.valueOf(result);
+								if (guarda_valores.equals("*")) {
+									guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+									display += guarda_valores;
+									op1 = result;
+								}
+								else {
+									display += guarda_valores;
+									guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+									op1 = 1 * Double.parseDouble(guarda_valores);
+									expressao.setText(display);	
+									calcular = operacao;
+									guarda_valores = "";
+								}
 								break;
 							case "/":
+								if (guarda_valores.equals("/")) {
+									guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+									display += guarda_valores;
+									op1 = result;
+								}
+								else {
+									display += guarda_valores;
+									guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
+									op1 = 1 / Double.parseDouble(guarda_valores);
+									expressao.setText(display);	
+									calcular = operacao;
+									guarda_valores = "";
+								}
 								display += guarda_valores;
 								guarda_valores = guarda_valores.substring(0, guarda_valores.length()-1);
 								if (Double.parseDouble(guarda_valores) != 0) {
@@ -143,6 +162,16 @@ public class Calculadora extends JFrame { // funciona fazendo as operações par
 										op2 = Double.parseDouble(guarda_valores);
 										result = op1 - op2;
 										System.out.print("\nRESULT FINAL:"+op1+" - "+op2+" = "+result);
+										break;
+									case "/":
+										op2 = Double.parseDouble(guarda_valores);
+										result = op1 / op2;
+										System.out.print("\nRESULT FINAL:"+op1+" / "+op2+" = "+result);
+										break;
+									case "*":
+										op2 = Double.parseDouble(guarda_valores);
+										result = op1 * op2;
+										System.out.print("\nRESULT FINAL:"+op1+" * "+op2+" = "+result);
 										break;
 								}
 								resposta = String.valueOf(result);
