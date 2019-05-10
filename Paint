@@ -1,0 +1,144 @@
+import java.awt.*;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.*;
+
+public class Border_Layout extends JFrame {
+
+	private JButton[] buttons;// array de botoes para ocultar partes
+	private static final String[] names = { "Oculta Norte", "Oculta Sul", "Oculta Leste", "Oculta Oeste",
+			"Oculta Centro" };
+	private BorderLayout border_Layout; // objeto BorderLayout
+	private JButton changeColorJButton, okBotao, cancelBt;
+	private Color color = Color.LIGHT_GRAY;
+	private JPanel colorJPanel;
+	private JPanel botaoJPanel;
+
+	private JComboBox comboBox;
+	private JList listaCores;
+	private static final String[] nomesCores = { "Branco", "Preto", "Azul", "Amarelo", "Vermelho", "Verde", "Rosa" };
+	private static final Color[] cores = { Color.WHITE, Color.BLACK, Color.BLUE, Color.YELLOW, Color.RED, Color.GREEN,
+			Color.PINK };
+	private GridLayout g1;
+	private int pointCount = 0; // nÃºmero de contagem de pontos
+
+	private Point[] points = new Point[10000]; // array de 10000 referencias ons.awt.Point
+	
+	// configura GUI e registra listeners de botão
+	public Border_Layout() {
+		super("Demonstração Border Layout");
+
+		border_Layout = new BorderLayout(5, 5); // espaços de 5 pixels
+		setLayout(border_Layout); // configura o layout do frame
+		buttons = new JButton[names.length]; // configura tamanho do array
+
+		listaCores = new JList(nomesCores);
+		listaCores.setVisibleRowCount(7);
+		listaCores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		g1 = new GridLayout(3,1,5,5);
+		
+		// configura changeColorButton e registra seu handler de evento
+		changeColorJButton = new JButton("Cor");
+		changeColorJButton.addActionListener(new ActionListener() { // classe interna an�nima
+			@Override // exibe JColorChooser quando o usu�rio clica no bot�o
+			public void actionPerformed(ActionEvent arg0) {
+				color = JColorChooser.showDialog(Border_Layout.this, "Escolhe uma cor", color);
+				// JColorChooser.showDialog(Component,T�tulo, Cor inicial) --> component � o
+				// componente que gera o dialog.
+
+				if (color == null) // configura a cor padr�o, se nenhuma cor for retornada
+					color = Color.LIGHT_GRAY;
+
+			} // fim action performed
+		} // fim classe interna an�nima
+		); // fim chamada addActionListener
+
+		okBotao = new JButton("Ok");
+		okBotao.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				colorJPanel.setBackground(color);
+			}
+		});
+		cancelBt = new JButton("Cancel");
+		cancelBt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				color = Color.LIGHT_GRAY;
+				colorJPanel.setBackground(color);
+			}
+		});
+
+		 // configura GUI e registra handler de evento
+
+			// trata evento de movimento do mouse do frame
+
+		colorJPanel.addMouseMotionListener(
+
+					new MouseMotionAdapter() { // classe interna anÃ´nima
+
+						public void mouseDragged(MouseEvent event) { // armazena coordenadas de arrastar e repinta
+
+							if (pointCount < points.length) {
+
+								points[pointCount] = event.getPoint(); // localiza o ponto
+
+								pointCount++; // incrementa o nÃºmero de pontos em array
+
+								repaint(); // repinta JFrame
+
+							}
+
+						}
+
+					}// fim classe interna
+
+			);// fim chamada addMouseMotionListener
+
+		// fim construtor PaintPainel
+
+		// desenha ovais em um quadro delimitador de 4 por 4 nas localizaÃ§Ãµes
+		// especificadas na janela
+
+		public void paintComponent(Graphics g) {
+
+			super.paintComponents(g); // limpa area de desenho
+
+			// desenha todos os pontos no array
+
+			for (int i = 0; i < pointCount; i++) {
+
+				g.setColor(Color.BLUE);
+
+				g.fillOval(points[i].x, points[i].y, 4, 4);
+
+			}
+		
+		botaoJPanel = new JPanel();
+		botaoJPanel.setLayout(g1);
+		add(botaoJPanel, BorderLayout.WEST);
+		botaoJPanel.add(cancelBt);
+		botaoJPanel.add(okBotao);
+		botaoJPanel.add(changeColorJButton);
+		
+		colorJPanel = new JPanel();
+		add(colorJPanel);
+	}
+
+	public static void main(String[] args) {
+
+		Border_Layout borderLayoutFrame = new Border_Layout();
+		borderLayoutFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		borderLayoutFrame.setSize(600, 200);
+		borderLayoutFrame.setVisible(true);
+	}
+}
