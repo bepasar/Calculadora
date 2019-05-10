@@ -1,0 +1,140 @@
+package ColorSelect;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.*;
+
+
+public class GridBagFrame extends JFrame{
+	private JButton changeColorJButton, okBotao, cancelBt;
+	private Color color = Color.LIGHT_GRAY;
+	private JPanel colorJPanel;
+	private JComboBox comboBox;
+	private JList listaCores;
+	private static final String[] nomesCores = {"Branco", "Preto", "Azul", "Amarelo", "Vermelho", "Verde", "Rosa"};
+	private static final Color[] cores = {Color.WHITE, Color.BLACK, Color.BLUE, Color.YELLOW, Color.RED, Color.GREEN, Color.PINK};
+	
+	//layout
+	private GridBagLayout layout;
+	private GridBagConstraints constraints;
+	
+	
+	
+	public GridBagFrame() {
+		super("ColorSelect");
+		layout = new GridBagLayout();
+		setLayout (layout);
+		constraints = new GridBagConstraints();
+		//cria JPanel para exibir as cores
+		//colorJPanel = new JPanel();
+		
+		// comboBox
+		comboBox = new JComboBox(nomesCores);
+		comboBox.setMaximumRowCount(7);
+		add(comboBox);
+		// action do comboBox
+		comboBox.addItemListener(
+				new ItemListener() {
+					@Override
+					public void itemStateChanged (ItemEvent e) {
+						color = ( cores[comboBox.getSelectedIndex()] );
+					}
+				}
+				);
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		addComponent ( comboBox, 0, 0, 3 , 1 );
+		
+		// listacores
+		listaCores = new JList (nomesCores);
+		listaCores.setVisibleRowCount(7);
+		listaCores.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
+		add( new JScrollPane( listaCores ));		
+		
+		
+	
+		//configura changeColorButton e registra seu handler de evento
+		changeColorJButton = new JButton("Cor");
+		changeColorJButton.addActionListener(
+			new ActionListener() { //classe interna an�nima
+			@Override //exibe JColorChooser quando o usu�rio clica no bot�o
+			public void actionPerformed(ActionEvent arg0) {
+				color = JColorChooser.showDialog(GridBagFrame.this, "Escolhe uma cor", color); 
+				//JColorChooser.showDialog(Component,T�tulo, Cor inicial) --> component � o componente que gera o dialog. 
+				
+				if (color == null) //configura a cor padr�o, se nenhuma cor for retornada
+					color = Color.LIGHT_GRAY;
+				
+				colorJPanel.setBackground(color); //muda a cor de fundo do painel de conte�do
+			} //fim action performed
+			} //fim classe interna an�nima
+		); //fim chamada addActionListener
+		
+		okBotao = new JButton( "Ok" );
+		okBotao.addActionListener(
+				new ActionListener() {
+					@Override
+					public void actionPerformed( ActionEvent arg0 ) {
+						colorJPanel.setBackground(color); 
+					}
+				}
+				);
+		cancelBt = new JButton( "Cancel" );
+		cancelBt.addActionListener(
+				new ActionListener() {
+					@Override
+					public void actionPerformed( ActionEvent arg0 ) {
+						color = Color.LIGHT_GRAY;
+						colorJPanel.setBackground(color); 
+					}
+				}
+				);
+	
+		
+		
+		
+		
+		
+		/*add(colorJPanel, BorderLayout.CENTER); //adiciona colorJPanel
+		add(changeColorJButton, BorderLayout.NORTH); //adiciona bot�o
+		add(okBotao, BorderLayout.PAGE_END);
+		add(cancelBt, BorderLayout.BEFORE_LINE_BEGINS);
+		add(comboBox, BorderLayout.AFTER_LINE_ENDS);*/
+		
+		//setSize(400, 150); // configura tamanho do frame
+		//setVisible(true); //exibe o frame
+		
+		 
+	}
+	private void addComponent( Component component,
+		      int row, int column, int width, int height )
+		   {
+		      constraints.gridx = column; // set gridx
+		      constraints.gridy = row; // set gridy
+		      constraints.gridwidth = width; // set gridwidth
+		      constraints.gridheight = height; // set gridheight
+		      layout.setConstraints( component, constraints ); // set constraints
+		      add( component ); // add component
+		   } // end method addComponent
+ 
+	
+	/*public static void main(String[] args) {
+		ShowColors2JFrame application = new ShowColors2JFrame();
+		application.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}*/
+	public static void main( String[] args )
+	   { 
+		GridBagFrame a = new GridBagFrame();
+		a.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+	      a.setSize( 300, 150 ); // set frame size
+	      a.setVisible( true ); // display frame
+	   } // end main
+	}
