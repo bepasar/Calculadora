@@ -23,8 +23,8 @@ public class Calculadora3 extends JFrame {
 	private GridLayout organizaBotoes;
 	private JTextField operacao;
 	
-	private static final String[] names = { "x!", "e^x", "raiz 2", "7", "8", "9", "/", "raiz 3", "%", "x²", "4", "5",
-			"6", "*", "x³", "x^y", "pi", "1", "2", "3", "-", "C", "(", ")", "0", ".", "=", "+" };
+	private static final String[] names = { "x!", "e^x", "raiz 2", "7", "8", "9", "/", "raiz 3", "%", "xÂ²", "4", "5",
+			"6", "*", "xÂ³", "x^y", "pi", "1", "2", "3", "-", "C", "(", ")", "0", ".", "=", "+" };
 
 	ArrayList<Double> resultadoParcial = new ArrayList<Double>();
 	String stringParcial = "";
@@ -37,7 +37,7 @@ public class Calculadora3 extends JFrame {
 	
 	// variaveis auxiliares
 	private String op = "";
-	private double resultado, x, y; //B para guardar o resultado das operações "complexas" (x², x!, etc)
+	private double resultado, x, y; //B para guardar o resultado das operaÃ§Ãµes "complexas" (xÂ², x!, etc)
 	private boolean enable_xy = false, enable_ex = false;
 	
 
@@ -91,14 +91,14 @@ public class Calculadora3 extends JFrame {
 						}  // aqui acaba
 
 					}
-					if (e.getActionCommand() == "x²") {
+					if (e.getActionCommand() == "xÂ²") {
 						op = op.substring(0, op.length() - 2);
 						resultado = Math.pow(Double.parseDouble(op), 2);
 						op = String.valueOf(resultado);
 						operacao.setText(op);
 					}
 					
-					if (e.getActionCommand() == "x³") {
+					if (e.getActionCommand() == "xÂ³") {
 						op = op.substring(0, op.length() - 2);
 						resultado = Math.pow(Double.parseDouble(op), 3);
 						op = String.valueOf(resultado);
@@ -156,36 +156,36 @@ public class Calculadora3 extends JFrame {
 									operacao.setText(op);
 								}
 								else {
-									operacao.setText("Erro: Não existe fatorial de número negativo...");
+									operacao.setText("Erro: NÃ£o existe fatorial de nÃºmero negativo...");
 									op = "";
 								}						         
 				         }
-				         catch (NumberFormatException naoInteiro) //Se naum for um numero inteiro entrará aqui
+				         catch (NumberFormatException naoInteiro) //Se naum for um numero inteiro entrarÃ¡ aqui
 				         {
-				      	    operacao.setText("Erro: numero não é inteiro...");
+				      	    operacao.setText("Erro: numero nÃ£o Ã© inteiro...");
 				      	    op = "";
 				         }
 					}
 					
-					if (e.getActionCommand() == "x^y" || enable_xy) { // enable do x^y sempre começa como falso
+					if (e.getActionCommand() == "x^y" || enable_xy) { // enable do x^y sempre comeÃ§a como falso
 						if (e.getActionCommand() == "x^y") {		// mas se entrar aqui por ter clicado em x^y
 							op = op.substring(0, op.length()-3);	// vai pegar o conteudo da string op -("x^y") 
 							x = Double.parseDouble(op);				// e jogar o valor numerico na variavel 'x'
 							enable_xy = true;						// habilita o enable para continuar caindo nesse if depois
 							op = "";
 						}
-						else if (e.getActionCommand() == "=") {		// aqui ele vai entrar só depois que digitar todos algarismos de y e apertar '='
+						else if (e.getActionCommand() == "=") {		// aqui ele vai entrar sÃ³ depois que digitar todos algarismos de y e apertar '='
 							op = op.substring(0, op.length()-1);
 							y = Double.parseDouble(op);
 							resultado = Math.pow(x, y);
 							System.out.println(+x+"^"+y+" = "+resultado);
 							op = String.valueOf(resultado);
 							operacao.setText(op);
-							enable_xy = false;						// no fim reseta o enable para não atrapalhar o '=' do evol
+							enable_xy = false;						// no fim reseta o enable para nÃ£o atrapalhar o '=' do evol
 						}									
 					}
 					
-					if (e.getActionCommand() == "e^x" || enable_ex) { // mesma logica do x^y, só que não precisa do primeiro valor pq é a constante 'e'
+					if (e.getActionCommand() == "e^x" || enable_ex) { // mesma logica do x^y, sÃ³ que nÃ£o precisa do primeiro valor pq Ã© a constante 'e'
 						if (e.getActionCommand() == "e^x") {
 							enable_ex = true;
 							op = "";
@@ -202,6 +202,7 @@ public class Calculadora3 extends JFrame {
 					
 					if (e.getActionCommand() == "C") {
 						op = "";
+						resultado = 0;
 						operacao.setText(op);
 					}
 					
